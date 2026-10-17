@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>战队助力 · 火力全开</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+<style>
+:root{
+  --y:#ffe14d;
+  --y2:#ffd000;
+  --ink:#1a1a1a;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:#eef1f6}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;color:var(--ink)}
+.page{max-width:480px;margin:0 auto;min-height:100vh;background:#f7f8fa;padding:0 0 46px}
+.header{
+  background:linear-gradient(180deg,#fff8d8 0%,#fffdf6 100%);
+  padding:18px 14px 16px;text-align:center;position:relative;overflow:hidden;
+  border-bottom:1px solid #ffe9a8;
+}
+.header::before,.header::after{
+  content:"";position:absolute;width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,215,0,.28),transparent 70%);
+}
+.header::before{top:-60px;left:-40px}
+.header::after{bottom:-70px;right:-30px}
+.h-title{font-size:20px;font-weight:900;letter-spacing:.5px;position:relative}
+.h-title .fire{font-size:22px;margin-right:4px}
+.h-sub{font-size:12.5px;color:#9a7b00;margin-top:6px;position:relative}
+.h-badge{
+  display:inline-flex;align-items:center;gap:4px;margin-top:10px;position:relative;
+  background:linear-gradient(180deg,#ffe14d,#ffcb00);color:#6b4b00;font-size:12px;font-weight:800;
+  padding:5px 14px;border-radius:999px;box-shadow:0 2px 6px rgba(255,190,0,.4);
+}
+.list{padding:12px 12px 0}
+/* 卡片 */
+.item{
+  display:flex;gap:11px;background:#fff;border-radius:14px;padding:14px 13px;margin-bottom:12px;
+  box-shadow:0 2px 10px rgba(30,40,70,.07);text-decoration:none;color:inherit;position:relative;
+  animation:up .4s both;border:1px solid #f0f0f0;
+}
+.item:active{background:#fffdf3}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+/* 品牌区 */
+.brand{flex:none;width:74px;display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:2px}
+.corner{
+  background:linear-gradient(135deg,#ffe14d,#ffd000);color:#7a5500;font-size:11px;font-weight:900;
+  padding:2px 9px;border-radius:5px 5px 5px 0;letter-spacing:.5px;align-self:flex-start;
+  box-shadow:0 1px 3px rgba(255,190,0,.5);transform:translateX(-3px);
+}
+.brand-logo{
+  width:72px;height:52px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.brand-logo img{max-width:100%;max-height:100%;object-fit:contain}
+/* 内容区 */
+.body{flex:1;min-width:0;padding-top:2px}
+.title-row{display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap}
+.team-name{font-size:15.5px;font-weight:700;line-height:1.4;color:#111}
+.people{
+  display:inline-flex;align-items:center;gap:2px;background:linear-gradient(180deg,#ffef9c,#ffe066);
+  color:#8a6200;font-size:11.5px;font-weight:800;padding:1px 7px;border-radius:5px;white-space:nowrap;
+  margin-top:2px;
+}
+.people::before{content:"👤";font-size:10px}
+.draw{font-size:12.5px;color:#999;margin:5px 0 8px}
+/* 数据条 */
+.meter{display:flex;align-items:stretch;border-radius:7px;overflow:hidden;margin-bottom:9px;width:100%}
+.power{
+  display:flex;align-items:center;gap:4px;background:#fffbe0;
+  padding:5px 9px;font-size:12px;color:#7a5500;white-space:nowrap;
+}
+.power b{font-size:13.5px;font-weight:900;color:#111}
+.power .icon{font-size:12px}
+.money{
+  flex:1;display:flex;align-items:center;background:#fff3a8;
+  padding:5px 9px;font-size:12px;color:#8a6200;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.money b{font-weight:900;color:#e04400;font-size:12.5px}
+/* 按钮 */
+.go{
+  display:flex;align-items:center;justify-content:center;gap:4px;width:100%;
+  background:linear-gradient(180deg,#ffe14d,#ffc700);color:#5a3d00;font-weight:900;font-size:13.5px;
+  padding:9px;border-radius:8px;border:none;cursor:pointer;
+  box-shadow:0 2px 0 #e0a800;transition:transform .1s;
+}
+.go:active{transform:translateY(2px);box-shadow:none}
+.go.empty{background:linear-gradient(180deg,#ededed,#e0e0e0);color:#999;box-shadow:0 2px 0 #ccc}
+/* 提示条 */
+.notice{
+  background:#fff8e1;border:1px dashed #ffd000;color:#8a6200;font-size:12px;line-height:1.6;
+  border-radius:10px;padding:10px 12px;margin:4px 12px 16px;text-align:center;
+}
+.notice b{color:#e04400}
+.footer{text-align:center;font-size:11px;color:#aaa;line-height:1.7;padding:8px 20px 0}
+.toast{
+  position:fixed;left:50%;bottom:80px;transform:translateX(-50%) translateY(20px);
+  background:rgba(0,0,0,.8);color:#fff;font-size:13.5px;padding:9px 16px;border-radius:999px;
+  opacity:0;pointer-events:none;transition:.25s;z-index:99;max-width:80vw;text-align:center;
+}
+.toast.show{opacity:1;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="h-title"><span class="fire">🔥</span>战队火力榜</div>
+    <div class="h-sub">点进战队，帮我加一把火</div>
+    <div class="h-badge">⏰ 活动限时 · 火力越高分得越多</div>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <div class="notice" id="notice">
+    💡 每个战队都点一遍，<b>火力值加起来才够猛</b>！
+  </div>
+
+  <div class="footer">
+    本页为活动助力分享页，活动规则与奖励以各品牌官方页面为准。
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ====================================================
+   ✏️ 只需改这里：每个战队粘上你自己的专属助力链接
+   url:"" 留空 = 该战队按钮显示"暂未开启"
+   ==================================================== */
+const TEAMS = [
+  { tag:"爆表", brand:"ogawa",       name:"奥佳华x彭于晏燃动战队", people:7251,  draw:"抽彭于晏亲签照",        power:"71.5W",  money:"50000元现金", url:"" },
+  { tag:"强劲", brand:"lengsuanling",name:"冷酸灵x黄子弘凡自在队",  people:6352,  draw:"抽黄子弘凡周边",        power:"63.2W",  money:"40000元现金", url:"" },
+  { tag:"火热", brand:"ronshen",     name:"容声x姜妍萌宠战队",      people:4578,  draw:"抽容声冰箱",            power:"47.8W",  money:"30000元现金", url:"" },
+  { tag:"雄厚", brand:"haier",       name:"海尔旧屋焕新战队",        people:3935,  draw:"抽海尔兄弟随行咖啡杯",  power:"34.8W",  money:"20000元现金", url:"" },
+  { tag:"夯爆", brand:"hisense",     name:"海信x侯明昊萌娃战队",     people:40660, draw:"抽侯明昊精美周边",      power:"443.6W", money:"130000元现金", url:"" },
+  { tag:"劲猛", brand:"liuyuning",   name:"刘宇宁懒人宅家战队",      people:16009, draw:"抽巨省电空调",          power:"393.4W", money:"90000元现金", url:"" },
+  { tag:"超燃", brand:"tcl",         name:"TCL宅家潮玩战队",        people:10566, draw:"抽TCL电视",             power:"95.9W",  money:"80000元现金", url:"" },
+  { tag:"硬核", brand:"philips",     name:"飞利浦剃须刀蜜居战队",    people:7504,  draw:"抽周杰伦精美贴纸",      power:"76W",    money:"60000元现金", url:"" },
+];
+
+/* ---------- 以下无需修改 ---------- */
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+
+function render(){
+  document.getElementById("list").innerHTML = TEAMS.map((t,i) => {
+    const has = t.url && t.url.trim() && t.url.trim() !== "#";
+    return `
+    <a class="item" href="${has ? esc(t.url.trim()) : "javascript:void(0)"}"
+       ${has ? "" : 'data-empty="1"'} data-name="${esc(t.name)}"
+       style="animation-delay:${i*0.05}s">
+      <div class="brand">
+        <div class="corner">${esc(t.tag)}</div>
+        <div class="brand-logo"><img src="img/${esc(t.brand)}.png" alt="${esc(t.name)}"></div>
+      </div>
+      <div class="body">
+        <div class="title-row">
+          <span class="team-name">${esc(t.name)}</span>
+          <span class="people">${t.people.toLocaleString()}</span>
+        </div>
+        <div class="draw">${esc(t.draw)}</div>
+        <div class="meter">
+          <span class="power"><span class="icon">💧</span><b>${esc(t.power)}</b> 火力值</span>
+          <span class="money">可瓜分<b>${esc(t.money)}</b></span>
+        </div>
+        <span class="go ${has ? "" : "empty"}">${has ? "🔥 去助力" : "暂未开启"}</span>
+      </div>
+    </a>`;
+  }).join("");
+}
+render();
+
+let timer;
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg; el.classList.add("show");
+  clearTimeout(timer); timer = setTimeout(()=>el.classList.remove("show"), 2000);
+}
+document.addEventListener("click", e => {
+  const card = e.target.closest('.item[data-empty="1"]');
+  if (card){ e.preventDefault(); toast("「" + card.dataset.name + "」链接还未配置"); }
+});
+</script>
+</body>
+</html>
