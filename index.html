@@ -44,14 +44,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans G
 .item:last-child{margin-bottom:2px}
 @keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 /* 品牌区 */
-.brand{flex:none;width:72px;display:flex;flex-direction:column;align-items:center;gap:5px;padding-top:2px}
+.brand{flex:none;width:64px;display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:2px}
 .corner{
   background:linear-gradient(180deg,#ffe94d,#ffce00);color:#7a5500;font-size:11px;font-weight:900;
   padding:2px 9px;border-radius:5px 5px 5px 0;letter-spacing:.5px;align-self:flex-start;
   box-shadow:0 2px 0 rgba(180,120,0,.35);transform:translateX(-3px);
 }
-.brand-logo{width:72px;height:50px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.brand-logo img{max-width:100%;max-height:100%;object-fit:contain}
+.brand-logo{
+  width:56px;height:56px;border-radius:14px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1px;color:#fff;
+  box-shadow:0 3px 8px rgba(0,40,100,.18);position:relative;overflow:hidden;
+}
+.brand-logo::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 28% 22%,rgba(255,255,255,.45),transparent 55%);
+}
+.brand-logo .glyph{font-size:22px;line-height:1;position:relative;z-index:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.15))}
+.brand-logo .abbr{font-size:11.5px;font-weight:900;letter-spacing:.3px;line-height:1;position:relative;z-index:1}
 /* 内容区 */
 .body{flex:1;min-width:0;padding-top:2px}
 .title-row{display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap}
@@ -124,14 +133,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans G
    url:"" 留空 = 该战队按钮显示"暂未开启"
    ==================================================== */
 const TEAMS = [
-  { tag:"爆表", brand:"ogawa",        name:"奥佳华x彭于晏燃动战队", people:7251,  draw:"抽彭于晏亲签照",       power:"71.5W",  money:"50000元现金",  url:"" },
-  { tag:"强劲", brand:"lengsuanling", name:"冷酸灵x黄子弘凡自在队",  people:6352,  draw:"抽黄子弘凡周边",       power:"63.2W",  money:"40000元现金",  url:"" },
-  { tag:"火热", brand:"ronshen",      name:"容声x姜妍萌宠战队",      people:4578,  draw:"抽容声冰箱",           power:"47.8W",  money:"30000元现金",  url:"" },
-  { tag:"雄厚", brand:"haier",        name:"海尔旧屋焕新战队",        people:3935,  draw:"抽海尔兄弟随行咖啡杯", power:"34.8W",  money:"20000元现金",  url:"" },
-  { tag:"夯爆", brand:"hisense",      name:"海信x侯明昊萌娃战队",     people:40660, draw:"抽侯明昊精美周边",     power:"443.6W", money:"130000元现金", url:"" },
-  { tag:"劲猛", brand:"liuyuning",    name:"刘宇宁懒人宅家战队",      people:16009, draw:"抽巨省电空调",         power:"393.4W", money:"90000元现金",  url:"" },
-  { tag:"超燃", brand:"tcl",          name:"TCL宅家潮玩战队",        people:10566, draw:"抽TCL电视",            power:"95.9W",  money:"80000元现金",  url:"" },
-  { tag:"硬核", brand:"philips",      name:"飞利浦剃须刀蜜居战队",    people:7504,  draw:"抽周杰伦精美贴纸",     power:"76W",    money:"60000元现金",  url:"" },
+  { tag:"爆表", brand:"奥佳华", abbr:"OGAWA", glyph:"💆", color:"linear-gradient(135deg,#8fd14f,#3a9e2e)",
+    name:"奥佳华x彭于晏燃动战队", people:7251,  draw:"抽彭于晏亲签照",       power:"71.5W",  money:"50000元现金",  url:"" },
+  { tag:"强劲", brand:"冷酸灵", abbr:"冷酸灵", glyph:"🦷", color:"linear-gradient(135deg,#5ac8fa,#1b7ff2)",
+    name:"冷酸灵x黄子弘凡自在队",  people:6352,  draw:"抽黄子弘凡周边",       power:"63.2W",  money:"40000元现金",  url:"" },
+  { tag:"火热", brand:"容声",   abbr:"容声",   glyph:"🧊", color:"linear-gradient(135deg,#34d97b,#0e9e52)",
+    name:"容声x姜妍萌宠战队",      people:4578,  draw:"抽容声冰箱",           power:"47.8W",  money:"30000元现金",  url:"" },
+  { tag:"雄厚", brand:"海尔",   abbr:"Haier",  glyph:"❄️", color:"linear-gradient(135deg,#4f8cff,#1b4fd8)",
+    name:"海尔旧屋焕新战队",        people:3935,  draw:"抽海尔兄弟随行咖啡杯", power:"34.8W",  money:"20000元现金",  url:"" },
+  { tag:"夯爆", brand:"海信",   abbr:"Hisense",glyph:"📺", color:"linear-gradient(135deg,#2fd3b4,#0a8f78)",
+    name:"海信x侯明昊萌娃战队",     people:40660, draw:"抽侯明昊精美周边",     power:"443.6W", money:"130000元现金", url:"" },
+  { tag:"劲猛", brand:"刘宇宁", abbr:"宇宁",   glyph:"🎤", color:"linear-gradient(135deg,#a58cff,#6a4cf0)",
+    name:"刘宇宁懒人宅家战队",      people:16009, draw:"抽巨省电空调",         power:"393.4W", money:"90000元现金",  url:"" },
+  { tag:"超燃", brand:"TCL",    abbr:"TCL",    glyph:"⚡", color:"linear-gradient(135deg,#ff5b5b,#d61b1b)",
+    name:"TCL宅家潮玩战队",        people:10566, draw:"抽TCL电视",            power:"95.9W",  money:"80000元现金",  url:"" },
+  { tag:"硬核", brand:"飞利浦", abbr:"PHILIPS",glyph:"🪒", color:"linear-gradient(135deg,#5b7fd8,#26348f)",
+    name:"飞利浦剃须刀蜜居战队",    people:7504,  draw:"抽周杰伦精美贴纸",     power:"76W",    money:"60000元现金",  url:"" },
 ];
 
 /* ---------- 以下无需修改 ---------- */
@@ -146,7 +163,10 @@ function render(){
        style="animation-delay:${i*0.06}s">
       <div class="brand">
         <div class="corner">${esc(t.tag)}</div>
-        <div class="brand-logo"><img src="img/${esc(t.brand)}.png" alt="${esc(t.name)}"></div>
+        <div class="brand-logo" style="background:${esc(t.color)}">
+          <span class="glyph">${esc(t.glyph)}</span>
+          <span class="abbr">${esc(t.abbr)}</span>
+        </div>
       </div>
       <div class="body">
         <div class="title-row">
