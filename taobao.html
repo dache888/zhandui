@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>开红包 · 最高26888元</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    min-height:100vh;
+    background:linear-gradient(180deg,#e8362b 0%,#c81e1e 55%,#a81212 100%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    overflow:hidden; position:relative;
+  }
+  /* 顶部微信提示条 */
+  .wxbar{
+    position:fixed; top:0; left:0; right:0; z-index:9;
+    background:rgba(0,0,0,.75); color:#fff;
+    font-size:13px; padding:8px 14px;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .glow {
+    position:absolute; width:340px; height:340px; border-radius:50%;
+    background:radial-gradient(circle,rgba(255,215,120,.45),transparent 70%);
+    top:-80px; left:50%; transform:translateX(-50%);
+  }
+  .envelope {
+    width:230px; height:280px; border-radius:22px;
+    background:linear-gradient(160deg,#ffd76e,#f5a623);
+    position:relative; z-index:2;
+    box-shadow:0 18px 50px rgba(0,0,0,.35);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    animation:bounce 1.6s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform:translateY(0) rotate(-2deg); }
+    50%     { transform:translateY(-14px) rotate(2deg); }
+  }
+  .envelope .seal {
+    width:86px; height:86px; border-radius:50%;
+    background:linear-gradient(160deg,#e8362b,#b01515);
+    color:#ffd76e; font-size:44px;
+    display:flex; align-items:center; justify-content:center;
+    border:4px solid rgba(255,255,255,.85);
+  }
+  .envelope .amt {
+    margin-top:16px; color:#8c1010; font-weight:800;
+    font-size:30px; letter-spacing:1px;
+  }
+  .envelope .amt small { font-size:15px; font-weight:600; }
+  .t1 { color:#fff; font-size:24px; font-weight:800; margin-top:30px; z-index:2;
+        text-shadow:0 2px 8px rgba(0,0,0,.3); }
+  .t2 { color:rgba(255,255,255,.85); font-size:14px; margin-top:10px; z-index:2; }
+  .dots { z-index:2; margin-top:26px; display:flex; gap:8px; }
+  .dots i {
+    width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,.85);
+    animation:blink 1.2s infinite;
+  }
+  .dots i:nth-child(2){ animation-delay:.2s; }
+  .dots i:nth-child(3){ animation-delay:.4s; }
+  @keyframes blink { 0%,100%{opacity:.25; transform:scale(.8);} 50%{opacity:1; transform:scale(1.15);} }
+  .btn {
+    z-index:2; margin-top:34px;
+    background:linear-gradient(180deg,#ffe08a,#ffc83d);
+    color:#8c1010; font-weight:800; font-size:18px;
+    padding:14px 52px; border-radius:40px;
+    box-shadow:0 6px 18px rgba(0,0,0,.3);
+    animation:pulse 1.4s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { transform:scale(1); }
+    50%     { transform:scale(1.06); }
+  }
+  .tip { color:rgba(255,255,255,.6); font-size:12px; margin-top:26px; z-index:2; }
+</style>
+</head>
+<body>
+<div class="wxbar" id="wxbar">💡 微信内请点右上角「···」选择「在浏览器打开 / 淘宝打开」<span style="cursor:pointer;margin-left:6px" onclick="document.getElementById('wxbar').remove()">✕</span></div>
+<div class="glow"></div>
+
+<div class="envelope">
+  <div class="seal">🧧</div>
+  <div class="amt">最高 <small>¥</small>26888</div>
+</div>
+
+<div class="t1">淘宝开红包</div>
+<div class="t2">正在为你打开 · 请稍等片刻</div>
+<div class="dots"><i></i><i></i><i></i></div>
+
+<div class="btn" id="goBtn" onclick="go()">立即打开</div>
+<div class="tip">活动奖励以淘宝官方页面为准</div>
+
+<script>
+var TARGET = "https://m.tb.cn/h.jfLSqnA";
+var jumped = false;
+
+function go(){
+  if (jumped) return;
+  jumped = true;
+
+  var isAndroid = /Android/i.test(navigator.userAgent);
+  var isWeChat  = /MicroMessenger/i.test(navigator.userAgent);
+  var isIOS     = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  // 安卓且非微信：先尝试唤起淘宝 App
+  if (isAndroid && !isWeChat){
+    var left = false;
+    document.addEventListener("visibilitychange", function(){ left = true; }, { once:true });
+    var t0 = Date.now();
+    window.location.href = "tbopen://" + TARGET.replace(/^https?:\/\//i, "");
+    setTimeout(function(){
+      if (!left && Date.now() - t0 < 4000) window.location.href = TARGET;
+    }, 1200);
+    return;
+  }
+  // 微信 / iOS / 其他：直接打开邀请链接
+  window.location.href = TARGET;
+}
+
+// 1.2 秒后自动跳转（微信内会先展示口令中间页，用户按提示「在浏览器打开」即可）
+setTimeout(go, 1200);
+
+// 微信隐藏提示条逻辑：非微信环境不显示
+if (!/MicroMessenger/i.test(navigator.userAgent)){
+  var bar = document.getElementById("wxbar");
+  if (bar) bar.remove();
+}
+</script>
+</body>
+</html>
