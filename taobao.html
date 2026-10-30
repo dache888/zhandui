@@ -95,31 +95,45 @@
 var TARGET = "https://m.tb.cn/h.jfLSqnA";
 var jumped = false;
 
-function go(){
+function go(direct){
   if (jumped) return;
   jumped = true;
 
   var isAndroid = /Android/i.test(navigator.userAgent);
-  var isWeChat  = /MicroMessenger/i.test(navigator.userAgent);
   var isIOS     = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  var isWeChat  = /MicroMessenger/i.test(navigator.userAgent);
+  var isMobile  = isAndroid || isIOS;
 
-  // 安卓且非微信：先尝试唤起淘宝 App
-  if (isAndroid && !isWeChat){
-    var left = false;
-    document.addEventListener("visibilitychange", function(){ left = true; }, { once:true });
-    var t0 = Date.now();
-    window.location.href = "tbopen://" + TARGET.replace(/^https?:\/\//i, "");
+  // 手机端（含微信）先尝试唤起淘宝 App：官方格式 taobao://m.taobao.com/tbopen/index.html?h5Url=
+  if (isMobile && direct !== false){
+    var appUrl = "taobao://m.taobao.com/tbopen/index.html?h5Url=" + encodeURIComponent(TARGET);
+    var appOpened = false;
+    var onHide = function(){ appOpened = true; };
+    document.addEventListener("visibilitychange", onHide, { once:true });
+    window.addEventListener("blur", onHide, { once:true });
+    window.addEventListener("pagehide", onHide, { once:true });
+
+    // 用隐藏 iframe 触发（安卓 Chrome / iOS Safari 兼容性最好）
+    var ifr = document.createElement("iframe");
+    ifr.style.cssText = "display:none;border:0;width:0;height:0;";
+    ifr.src = appUrl;
+    document.body.appendChild(ifr);
+    // 双保险：再直接跳一次（部分安卓浏览器只认 location）
+    try { window.location.href = appUrl; } catch(err){}
+
     setTimeout(function(){
-      if (!left && Date.now() - t0 < 4000) window.location.href = TARGET;
-    }, 1200);
+      document.removeEventListener("visibilitychange", onHide);
+      if (!appOpened && document.visibilityState === "visible"){
+        window.location.href = TARGET;   // 唤起失败 → 打开网页版邀请链接
+      }
+    }, 1600);
     return;
   }
-  // 微信 / iOS / 其他：直接打开邀请链接
   window.location.href = TARGET;
 }
 
 // 1.2 秒后自动跳转（微信内会先展示口令中间页，用户按提示「在浏览器打开」即可）
-setTimeout(go, 1200);
+setTimeout(function(){ go(); }, 900);
 
 // 微信隐藏提示条逻辑：非微信环境不显示
 if (!/MicroMessenger/i.test(navigator.userAgent)){
