@@ -147,7 +147,7 @@ const TEAMS = [
   { tag:"雄厚", brand:"奥佳华", abbr:"OGAWA", glyph:"💆", color:"linear-gradient(135deg,#8fd14f,#3a9e2e)",
     name:"奥佳华x彭于晏燃动战队", people:23022,  draw:"抽彭于晏亲签照",       power:"395.5W",   money:"53000元现金",  url:"https://3.cn/3-8UEjVj" },
   { tag:"必开", brand:"淘宝",   abbr:"淘宝",   glyph:"🧧", color:"linear-gradient(135deg,#ff9a3d,#e8362b)",
-    name:"淘宝开红包最高26888",    people:0,     draw:"天天开红包 · 最高26888元", power:"—",   money:"26888元红包",  url:"https://m.tb.cn/h.jfLSqnA" },
+    name:"淘宝开红包最高26888",    people:0,     draw:"天天开红包 · 最高26888元", power:"—",   money:"26888元红包",  url:"https://m.tb.cn/h.jfLSqnA", app:"taobao" },
   /*
   { tag:"劲猛", brand:"刘宇宁", abbr:"宇宁",   glyph:"🎤", color:"linear-gradient(135deg,#a58cff,#6a4cf0)",
     name:"刘宇宁懒人宅家战队",      people:26247, draw:"抽巨省电空调",         power:"951.1W", money:"92000元现金",  url:"" },
@@ -164,7 +164,7 @@ function render(){
     const has = t.url && t.url.trim() && t.url.trim() !== "#";
     return `
     <a class="item" href="${has ? esc(t.url.trim()) : "javascript:void(0)"}"
-       ${has ? "" : 'data-empty="1"'} data-name="${esc(t.name)}"
+       ${has ? "" : 'data-empty="1"'} data-name="${esc(t.name)}" data-app="${esc(t.app||"")}"
        style="animation-delay:${i*0.06}s">
       <div class="brand">
         <div class="corner">${esc(t.tag)}</div>
@@ -201,7 +201,25 @@ function toast(msg){
 }
 document.addEventListener("click", e => {
   const card = e.target.closest('.item[data-empty="1"]');
-  if (card){ e.preventDefault(); toast("「" + card.dataset.name + "」链接还未配置"); }
+  if (card){ e.preventDefault(); toast("「" + card.dataset.name + "」链接还未配置"); return; }
+
+  // 应用唤起：安卓点卡片先尝试打开 App，未唤起则回落到网页（原邀请链接不变）
+  const appCard = e.target.closest('.item[data-app="taobao"]');
+  if (appCard){
+    const webUrl = appCard.getAttribute("href") || "";
+    if (!webUrl || webUrl === "javascript:void(0)") return;
+    if (!/Android/i.test(navigator.userAgent)) return;      // 非安卓直接走网页
+    e.preventDefault();
+    let left = false;
+    const mark = () => { left = true; };
+    document.addEventListener("visibilitychange", mark, { once:true });
+    const t0 = Date.now();
+    window.location.href = "tbopen://" + webUrl.replace(/^https?:\/\//i, "");
+    setTimeout(() => {
+      if (left || Date.now() - t0 > 2500) return;           // 已跳 App 就不再打扰
+      window.location.href = webUrl;                         // 唤起失败 → 打开原链接
+    }, 1200);
+  }
 });
 </script>
 </body>
